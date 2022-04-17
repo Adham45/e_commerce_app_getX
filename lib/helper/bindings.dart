@@ -1,6 +1,8 @@
 import 'package:e_commerce_app/core/view_model/auth_view_model.dart';
 import 'package:e_commerce_app/core/view_model/control_view_model.dart';
 import 'package:e_commerce_app/core/view_model/home_view_model.dart';
+import 'package:e_commerce_app/core/view_model/cart_view_model.dart';
+
 import 'package:get/get.dart';
 
 class Binding extends Bindings {
@@ -9,5 +11,6 @@ class Binding extends Bindings {
     Get.lazyPut(() => AuthViewModel());
     Get.lazyPut(() => ControlViewModel());
     Get.lazyPut(() => HomeViewModel());
+    Get.lazyPut(() => CartViewModel());
   }
 }

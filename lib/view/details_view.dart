@@ -1,8 +1,11 @@
 import 'package:e_commerce_app/constants.dart';
+import 'package:e_commerce_app/core/view_model/cart_view_model.dart';
+import 'package:e_commerce_app/model/cart_product_model.dart';
 import 'package:e_commerce_app/model/product_model.dart';
 import 'package:e_commerce_app/view/widgets/custom_button.dart';
 import 'package:e_commerce_app/view/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({Key? key, this.productModel}) : super(key: key);
@@ -130,13 +133,24 @@ class DetailsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    height: 100,
-                    width: 180,
-                    child: CustomGeneralButton(
-                      text: "Add",
-                      onTap: () {},
+                  GetBuilder<CartViewModel>(
+                    init: CartViewModel(),
+                    builder: (controller) => Container(
+                      padding: EdgeInsets.all(20),
+                      height: 100,
+                      width: 180,
+                      child: CustomGeneralButton(
+                        text: "Add",
+                        onTap: () {
+                          controller.addProduct(
+                            CartProductModel(
+                                name: productModel!.name,
+                                image: productModel!.image,
+                                price: productModel!.price,
+                                quantity: 1),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
