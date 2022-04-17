@@ -16,65 +16,75 @@ class CartScreen extends StatelessWidget {
         children: [
           Expanded(
             child: GetBuilder<CartViewModel>(
-              init: CartViewModel(),
-              builder: (controller) => Container(
-                child: ListView.separated(
-                  itemBuilder: (context, index) {
-                    return Container(
-                      height: 140,
-                      child: Row(
-                        children: [
-                          Container(
+              init: Get.find<CartViewModel>(),
+              builder: (controller) => ListView.separated(
+                itemBuilder: (context, index) {
+                  return SizedBox(
+                    height: 140,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
                             width: 140,
-                            child: Image.asset(
+                            child: Image.network(
                               controller.cartProductModel[index].image,
                               fit: BoxFit.fill,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(
-                                  text: controller.cartProductModel[index].name,
-                                  fontSize: 24,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                CustomText(
-                                  text:
-                                      "\$ ${controller.cartProductModel[index].price.toString()}",
-                                  color: primaryColor,
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  width: 140,
-                                  color: Colors.grey.shade200,
-                                  height: 40,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(
+                                text: controller.cartProductModel[index].name,
+                                fontSize: 20,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CustomText(
+                                text:
+                                    "\$ ${controller.cartProductModel[index].price.toString()}",
+                                color: primaryColor,
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                width: 140,
+                                color: Colors.grey.shade200,
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.increaseQuantity(index);
+                                      },
+                                      child: Icon(
                                         Icons.add,
                                         color: Colors.black,
                                       ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      CustomText(
-                                        color: Colors.black,
-                                        alignment: Alignment.center,
-                                        text: "1",
-                                        fontSize: 20,
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Container(
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    CustomText(
+                                      color: Colors.black,
+                                      alignment: Alignment.center,
+                                      text: controller
+                                          .cartProductModel[index].quantity
+                                          .toString(),
+                                      fontSize: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    GestureDetector(
+                                      onTap: ()=>controller.decreaseQuantity(index),
+                                      child: Container(
                                         padding: EdgeInsets.only(
                                           bottom: 20,
                                         ),
@@ -83,23 +93,23 @@ class CartScreen extends StatelessWidget {
                                           color: Colors.black,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                  itemCount: controller.cartProductModel.length,
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                      height: 15,
-                    );
-                  },
-                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+                itemCount: controller.cartProductModel.length,
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: 15,
+                  );
+                },
               ),
             ),
           ),
@@ -118,10 +128,13 @@ class CartScreen extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    CustomText(
-                      text: "\$ 2000",
-                      color: primaryColor,
-                      fontSize: 18,
+                    GetBuilder<CartViewModel>(
+                      init: Get.find<CartViewModel>(),
+                      builder: (controller) => CustomText(
+                        text: "\$ ${controller.totalPrice}",
+                        color: primaryColor,
+                        fontSize: 18,
+                      ),
                     ),
                   ],
                 ),

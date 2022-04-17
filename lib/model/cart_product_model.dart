@@ -1,5 +1,5 @@
 class CartProductModel {
-  late String name, image, price;
+  late String name, image, price, productId;
   late int quantity;
 
   CartProductModel({
@@ -7,6 +7,7 @@ class CartProductModel {
     required this.image,
     required this.price,
     required this.quantity,
+    required this.productId,
   });
 
   CartProductModel.fromJson(Map<dynamic, dynamic> map) {
@@ -18,6 +19,7 @@ class CartProductModel {
     image = map['image'];
     quantity = map['quantity'];
     price = map['price'];
+    productId = map['productId'];
   }
 
   toJson() {
@@ -26,6 +28,7 @@ class CartProductModel {
       'image': image,
       'quantity': quantity,
       'price': price,
+      'productId': productId,
     };
   }
 }

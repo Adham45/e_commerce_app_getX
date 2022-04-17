@@ -134,7 +134,7 @@ class DetailsScreen extends StatelessWidget {
                     ],
                   ),
                   GetBuilder<CartViewModel>(
-                    init: CartViewModel(),
+                    init: Get.find<CartViewModel>(),
                     builder: (controller) => Container(
                       padding: EdgeInsets.all(20),
                       height: 100,
@@ -144,10 +144,12 @@ class DetailsScreen extends StatelessWidget {
                         onTap: () {
                           controller.addProduct(
                             CartProductModel(
-                                name: productModel!.name,
-                                image: productModel!.image,
-                                price: productModel!.price,
-                                quantity: 1),
+                              name: productModel!.name,
+                              image: productModel!.image,
+                              price: productModel!.price,
+                              quantity: 1,
+                              productId: productModel!.productId,
+                            ),
                           );
                         },
                       ),

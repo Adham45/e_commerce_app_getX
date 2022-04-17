@@ -1,5 +1,6 @@
 import 'package:e_commerce_app/constants.dart';
 import 'package:e_commerce_app/model/cart_product_model.dart';
+import 'package:e_commerce_app/model/product_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -19,8 +20,12 @@ class CartDatabaseHelper {
     String path = join(await getDatabasesPath(), 'CartProduct.db');
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
-      await db.execute(
-          ''' CREATE TABLE $tableCartProduct ( $columnName TEXT NOT NULL,$columnImage TEXT NOT NULL,$columnPrice TEXT NOT NULL,$columnQuantity INTEGER NOT NULL,) ''');
+      await db.execute(''' CREATE TABLE $tableCartProduct ( 
+          $columnName TEXT NOT NULL,
+          $columnImage TEXT NOT NULL,
+          $columnPrice TEXT NOT NULL,
+          $columnQuantity INTEGER NOT NULL,
+          $columnProductId TEXT NOT NULL) ''');
     });
   }
 
@@ -37,5 +42,15 @@ class CartDatabaseHelper {
     var dbClient = await database;
     await dbClient.insert(tableCartProduct, cartProductModel.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  updateProduct(CartProductModel cartProductModel) async {
+    var dbClient = await database;
+    return await dbClient.update(
+      tableCartProduct,
+      cartProductModel.toJson(),
+      where: '$columnProductId = ?',
+      whereArgs: [cartProductModel.productId],
+    );
   }
 }
