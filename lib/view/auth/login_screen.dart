@@ -127,7 +127,7 @@ class LoginScreen extends GetWidget<AuthViewModel> {
                 CustomButtonWithIcon(
                   text: "Log In With Facebook",
                   onTap: () {
-                    controller.facebookSignInMethod();
+                    controller.signInWithFacebookAccount();
                   },
                   iconData: FontAwesomeIcons.facebook,
                   color: Colors.blue,
@@ -138,7 +138,7 @@ class LoginScreen extends GetWidget<AuthViewModel> {
                 CustomButtonWithIcon(
                   text: "Log In With Google",
                   onTap: () {
-                    controller.googleSignInMethod();
+                    controller.signInWithGoogleAccount();
                   },
                   iconData: FontAwesomeIcons.googlePlusG,
                   color: Colors.redAccent,

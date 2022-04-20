@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_commerce_app/model/user_model.dart';
 
-class FireStoreUser {
-  final CollectionReference _collectionReference =
-      FirebaseFirestore.instance.collection('Users');
+import '../../model/user_model.dart';
 
-  Future<void> addUsersToFireStore(UserModel userModel) async {
-    return await _collectionReference
-        .doc(UserModel().userId)
-        .set(userModel.toJson());
+class FirestoreUser {
+  final CollectionReference _usersCollection =
+  FirebaseFirestore.instance.collection('Users');
+
+  addUserToFirestore(UserModel userModel) async {
+    await _usersCollection.doc(userModel.userId).set(userModel.toJson());
+  }
+
+  Future<DocumentSnapshot> getUserFromFirestore(String uid) async {
+    return await _usersCollection.doc(uid).get();
   }
 }

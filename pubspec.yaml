@@ -43,6 +43,8 @@ dependencies:
   cloud_firestore: ^3.1.11
   sqflite: ^2.0.2+1
   path: ^1.7.0
+  shared_preferences: ^2.0.13
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:

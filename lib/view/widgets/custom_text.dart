@@ -11,7 +11,7 @@ class CustomText extends StatelessWidget {
     this.maxLines = 1,
     this.height = 1,
   }) : super(key: key);
-  final String text;
+  final String? text;
   final double fontSize;
   final Color color;
   final FontWeight fontWeight;
@@ -24,7 +24,7 @@ class CustomText extends StatelessWidget {
     return Container(
       alignment: alignment,
       child: DefaultTextStyle(
-        child: Text(text),
+        child: Text(text!),
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: fontWeight,
