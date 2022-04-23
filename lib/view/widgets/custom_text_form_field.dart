@@ -9,11 +9,13 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.onSaved,
     this.validator,
+    this.keyBoardType,
   }) : super(key: key);
   final String? text;
   final String? hintText;
   final FormFieldSetter? onSaved;
   final FormFieldValidator? validator;
+  final TextInputType? keyBoardType;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class CustomTextFormField extends StatelessWidget {
           TextFormField(
             onSaved: onSaved,
             validator: validator,
+            keyboardType: keyBoardType,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: TextStyle(

@@ -1,64 +1,74 @@
-import 'package:e_commerce_app/core/services/database/cart_database_helper.dart';
 import 'package:e_commerce_app/model/cart_product_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class CartViewModel extends GetxController {
-  ValueNotifier<bool> get loading => _loading;
-  final ValueNotifier<bool> _loading = ValueNotifier(false);
-  List<CartProductModel> _cartProductModel = [];
+import '../services/database/local_database_cart.dart';
 
-  List<CartProductModel> get cartProductModel => _cartProductModel;
+
+class CartViewModel extends GetxController {
+  List<CartProductModel> _cartProducts = [];
+
+  List<CartProductModel> get cartProducts => _cartProducts;
+
+  double _totalPrice = 0;
 
   double get totalPrice => _totalPrice;
-  double _totalPrice = 0.0;
-  var dbHelper = CartDatabaseHelper.db;
 
-  CartViewModel() {
-    getAllProduct();
+  @override
+  void onInit() {
+    getCartProducts();
+    getTotalPrice();
+    super.onInit();
+
   }
 
-  getAllProduct() async {
-    _loading.value = true;
-    _cartProductModel = await dbHelper.getAllProduct();
-    _loading.value = false;
+  getCartProducts() async {
+    _cartProducts = await LocalDatabaseCart.db.getAllProducts();
     getTotalPrice();
     update();
   }
 
-  getTotalPrice() {
-    for (int i = 0; i < _cartProductModel.length; i++) {
-      _totalPrice += (double.parse(_cartProductModel[i].price) *
-          _cartProductModel[i].quantity);
-      update();
+  addProduct(CartProductModel cartModel) async {
+    bool _isExist = false;
+    _cartProducts.forEach((element) {
+      if (element.productId == cartModel.productId) {
+        _isExist = true;
+      }
+    });
+    if (!_isExist) {
+      await LocalDatabaseCart.db.insertProduct(cartModel);
+      getCartProducts();
     }
   }
 
-  addProduct(CartProductModel cartProductModel) async {
-    for (int i = 0; i < _cartProductModel.length; i++) {
-      if (_cartProductModel[i].productId == cartProductModel.productId) {
-        return;
-      }
-    }
-    await dbHelper.insert(cartProductModel);
-    _cartProductModel.add(cartProductModel);
-    _totalPrice +=
-        (double.parse(cartProductModel.price) * cartProductModel.quantity);
-    update();
+  removeProduct(String productId) async {
+    await LocalDatabaseCart.db.deleteProduct(productId);
+    getCartProducts();
+  }
+
+  removeAllProducts() async {
+    await LocalDatabaseCart.db.deleteAllProducts();
+    getCartProducts();
+  }
+
+  getTotalPrice() {
+    _totalPrice = 0;
+    _cartProducts.forEach((cartProduct) {
+      _totalPrice += (double.parse(cartProduct.price) * cartProduct.quantity);
+    });
   }
 
   increaseQuantity(int index) async {
-    _cartProductModel[index].quantity++;
-    _totalPrice += (double.parse(_cartProductModel[index].price));
-    await dbHelper.updateProduct(_cartProductModel[index]);
+    _cartProducts[index].quantity++;
+    getTotalPrice();
+    await LocalDatabaseCart.db.update(_cartProducts[index]);
     update();
   }
 
   decreaseQuantity(int index) async {
-    if(_cartProductModel[index].quantity > 1){
-      _cartProductModel[index].quantity--;
-      _totalPrice -= (double.parse(_cartProductModel[index].price));
-      await dbHelper.updateProduct(_cartProductModel[index]);
+    if (_cartProducts[index].quantity != 0) {
+      _cartProducts[index].quantity--;
+      getTotalPrice();
+      await LocalDatabaseCart.db.update(_cartProducts[index]);
       update();
     }
   }

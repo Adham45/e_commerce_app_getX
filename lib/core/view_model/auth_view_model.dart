@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -11,7 +12,7 @@ import '../../view/control_view.dart';
 class AuthViewModel extends GetxController {
   String? email, password, name;
 
-  Rxn<User>? _user = Rxn<User>();
+  final Rxn<User>? _user = Rxn<User>();
 
   String? get user => _user?.value?.email;
 
@@ -21,6 +22,9 @@ class AuthViewModel extends GetxController {
   void onInit() {
     super.onInit();
     _user!.bindStream(_auth.authStateChanges());
+    if (_auth.currentUser != null) {
+      getCurrentUserData(_auth.currentUser!.uid);
+    }
   }
 
   void signUpWithEmailAndPassword() async {
@@ -116,7 +120,9 @@ class AuthViewModel extends GetxController {
       await _auth.signOut();
       LocalStorageUser.clearUserData();
     } catch (error) {
-      print(error);
+      if (kDebugMode) {
+        print(error);
+      }
     }
   }
 
@@ -124,7 +130,7 @@ class AuthViewModel extends GetxController {
     UserModel _userModel = UserModel(
       userId: userCredential.user!.uid,
       email: userCredential.user!.email!,
-      name: name == null ? userCredential.user!.displayName! : this.name!,
+      name: name == null ? userCredential.user!.displayName! : name!,
       pic: userCredential.user!.photoURL == null
           ? 'default'
           : userCredential.user!.photoURL! + "?width=400",
@@ -135,5 +141,11 @@ class AuthViewModel extends GetxController {
 
   void saveUserLocal(UserModel userModel) async {
     LocalStorageUser.setUserData(userModel);
+  }
+
+  void getCurrentUserData(String uid) async {
+    await FirestoreUser().getUserFromFirestore(uid).then((value) {
+      saveUserLocal(UserModel.fromJson(value.data() as Map<dynamic, dynamic>));
+    });
   }
 }

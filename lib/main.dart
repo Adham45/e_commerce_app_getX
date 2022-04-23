@@ -1,3 +1,4 @@
+import 'package:e_commerce_app/core/view_model/checkout_view_model.dart';
 import 'package:e_commerce_app/helper/bindings.dart';
 import 'package:e_commerce_app/view/control_view.dart';
 import 'package:firebase_core/firebase_core.dart';
